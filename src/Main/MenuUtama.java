@@ -337,6 +337,16 @@ public class MenuUtama extends javax.swing.JFrame {
             }
         });
         
+          MenuItem menuSuratMasuk                    = new MenuItem(null, true, iconSubSuratMasuk, "Surat masuk", new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                pn_Utama.removeAll();
+                pn_Utama.add(new menuSuratMasuk());
+                pn_Utama.repaint();
+                pn_Utama.revalidate();
+            }
+        });
+        
         MenuItem menuLogSuratKeluar                = new MenuItem(null, true, iconSubSuratKeluar, "Log Surat Keluar", new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -446,7 +456,7 @@ public class MenuUtama extends javax.swing.JFrame {
             }
         });
 
-        MenuItem menuSurat                          = new MenuItem(iconSurat, false, null, "Surat", null, menuSuratKeluar);        
+        MenuItem menuSurat                          = new MenuItem(iconSurat, false, null, "Surat", null, menuSuratKeluar, menuSuratMasuk);        
         MenuItem menuLog                            = new MenuItem(iconLog, false, null, "Log Aktifitas", null, menuLogBagian, menuLogKategori, menuLogSuratKeluar);
         MenuItem menuSampah                         = new MenuItem(iconSampah, false, null, "Sampah", null, menuSampahBagian, menuSampahKategori, menuSampahSuratKeluar);
 
