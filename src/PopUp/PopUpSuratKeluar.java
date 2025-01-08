@@ -10,9 +10,11 @@ import Kelas.Surat_Keluar;
 import Main.MenuUtama;
 import Main.menuSuratKeluar;
 import com.toedter.calendar.JTextFieldDateEditor;
+import java.awt.Desktop;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -757,7 +759,35 @@ public class PopUpSuratKeluar extends javax.swing.JDialog {
     }//GEN-LAST:event_bt_HapusActionPerformed
 
     private void bt_LihatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bt_LihatActionPerformed
-        // TODO add your handling code here:
+        try {
+            String namaFile = ta_File.getText();
+            if (namaFile == null || namaFile.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Nama file tidak tersedia.", "Kesalahan", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            Surat_Keluar suratKeluar = new Surat_Keluar();
+            suratKeluar.setNama_file(namaFile);
+            byte[] fileData = suratKeluar.BukaFile();
+
+            if (fileData != null) {
+                File tempFile = new File(System.getProperty("java.io.tmpdir") + "/" + namaFile);
+                FileOutputStream fos = new FileOutputStream(tempFile);
+                fos.write(fileData);
+                fos.close();
+
+                if (Desktop.isDesktopSupported()) {
+                    Desktop.getDesktop().open(tempFile);
+                } else {
+                    JOptionPane.showMessageDialog(this, "Desktop tidak didukung pada sistem ini.", "Kesalahan", JOptionPane.ERROR_MESSAGE);
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, "File tidak ditemukan untuk surat ini.", "Informasi", JOptionPane.INFORMATION_MESSAGE);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Terjadi kesalahan saat membuka file: " + e.getMessage(), "Kesalahan", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_bt_LihatActionPerformed
 
     private void bt_RestoreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bt_RestoreActionPerformed
@@ -789,7 +819,7 @@ public class PopUpSuratKeluar extends javax.swing.JDialog {
             Surat_Keluar kodeHapus = new Surat_Keluar();
             kodeHapus.setId_suratkeluar(Integer.parseInt(lb_Id.getText()));
             kodeHapus.KodeHapusPermanen();
-            
+
             // Reload data
             menuSuratKeluar kt = new menuSuratKeluar();
             kt.loadTabel();
@@ -797,7 +827,7 @@ public class PopUpSuratKeluar extends javax.swing.JDialog {
 
             // Tutup form
             dispose();
-            
+
         } catch (SQLException ex) {
             Logger.getLogger(PopUpSuratKeluar.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ParseException ex) {
